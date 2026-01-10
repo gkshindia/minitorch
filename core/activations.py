@@ -129,3 +129,44 @@ class GELU(ActivationAbstract):
     
     def backward(self, grad_output: Tensor) -> Tensor:
         pass
+
+
+class Softmax(ActivationAbstract):
+    """
+    Softmax activation: f(x_i) = e^(x_i) / Σ(e^(x_j))
+
+    Converts any vector to a probability distribution.
+    Sum of all outputs equals 1.0.
+    """
+
+    def forward(self, x: Tensor, dim: int = -1) -> Tensor:
+        """
+        1. Subtract max for numerical stability: x - max(x)
+        2. Compute exponentials: exp(x - max(x))
+        3. Sum along dimension: sum(exp_values)
+        4. Divide: exp_values / sum
+        5. Return result wrapped in new Tensor
+
+        - Use np.max(x.data, axis=dim, keepdims=True) for max
+        - Use np.sum(exp_values, axis=dim, keepdims=True) for sum
+        - The max subtraction prevents overflow in exponentials
+        """
+
+        x_max_data = np.max(x.data, axis=dim, keepdims=True)
+        x_max = Tensor(x_max_data)
+        x_shifted = x - x_max  # Tensor subtraction
+
+        exp_values = Tensor(np.exp(x_shifted.data))
+
+        exp_sum_data = np.sum(exp_values.data, axis=dim, keepdims=True)
+        exp_sum = Tensor(exp_sum_data)
+
+        result = exp_values / exp_sum
+        return result
+
+    def backward(self, x: Tensor) -> Tensor:
+        pass
+
+    def __call__(self, x: Tensor, dim: int = -1) -> Tensor:
+        return self.forward(x, dim)
+
