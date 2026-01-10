@@ -45,9 +45,29 @@ class Sigmoid(ActivationAbstract):
 
         return Tensor(result_data)
     
-    def __call__(self, x):
-        return self.forward(x)
-    
     def backward(self, grad_output):
         pass
 
+
+class ReLU(ActivationAbstract):
+    """
+    ReLU activation: f(x) = max(0, x)
+
+    Sets negative values to zero, keeps positive values unchanged.
+    Most popular activation for hidden layers.
+    """
+
+    def forward(self, x: Tensor) -> Tensor:
+        """
+        1. Use np.maximum(0, x.data) for element-wise max with zero
+        2. Return result wrapped in new Tensor
+
+        np.maximum handles element-wise maximum automatically
+        """
+
+        result = np.maximum(0, x.data)
+        return Tensor(result)
+    
+    def backward(self, grad_output: Tensor) -> Tensor:
+        pass
+    
