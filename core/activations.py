@@ -86,4 +86,46 @@ class Tanh(ActivationAbstract):
     
     def backward(self, grad_output: Tensor) -> Tensor:
         pass
+
+
+class GELU(ActivationAbstract):
+    """
+    GELU activation: f(x) = x * Φ(x) ≈ x * Sigmoid(1.702 * x)
+
+    The 1.702 constant comes from √(2/π) approximation
+
+    Smooth approximation to ReLU, used in modern transformers.
+    Where Φ(x) is the cumulative distribution function of standard normal.
+
+    GELU(x) ≈ 0.5 × x × (1 + tanh(√(2/π) × (x + 0.044715x³)))
+
+    GELU has no-zero gradients even for negative inputs. 
+
+    GELU(x) = x · P(X ≤ x)  where X ~ N(0,1)
+
+    Translation:
+    "Multiply input by the probability that a random 
+    normal variable is less than it"
+
+    For x = 2:   P(X ≤ 2) ≈ 0.977  → keep most of it
+    For x = 0:   P(X ≤ 0) = 0.5    → keep half
+    For x = -2:  P(X ≤ -2) ≈ 0.023 → mostly suppress
+
+    stochastic regularization . 
+    """
+
+    def forward(self, x: Tensor) -> Tensor:
+        """
+        1. Use approximation: x * sigmoid(1.702 * x)
+        2. Compute sigmoid part: 1 / (1 + exp(-1.702 * x))
+        3. Multiply by x element-wise
+        4. Return result wrapped in new Tensor
+
+        """
+        sigmoid_part = 1.0 / (1.0 + np.exp(-1.702 * x.data))
+        result = x.data * sigmoid_part
+
+        return Tensor(result)
     
+    def backward(self, grad_output: Tensor) -> Tensor:
+        pass
