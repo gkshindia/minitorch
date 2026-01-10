@@ -70,4 +70,20 @@ class ReLU(ActivationAbstract):
     
     def backward(self, grad_output: Tensor) -> Tensor:
         pass
+
+
+class Tanh(ActivationAbstract):
+    """
+    Tanh activation: f(x) = (e^x - e^(-x))/(e^x + e^(-x))
+
+    Maps any real number to (-1, 1) range.
+    Zero-centered alternative to sigmoid.
+    """
+
+    def forward(self, x: Tensor) -> Tensor:
+        result = np.tanh(x.data)
+        return Tensor(result)
+    
+    def backward(self, grad_output: Tensor) -> Tensor:
+        pass
     

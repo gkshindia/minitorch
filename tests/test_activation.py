@@ -1,7 +1,7 @@
 import numpy as np
 import pytest
 from core.tensor import Tensor
-from core.activations import Sigmoid, ReLU
+from core.activations import Sigmoid, ReLU, Tanh
 
 TOLERANCE = 1e-6  # Tolerance for floating point comparisons
 
@@ -564,6 +564,339 @@ def test_relu_comparison_with_sigmoid():
     print("✅ ReLU vs Sigmoid comparison complete!")
 
 
+# ============================================================================
+# TANH ACTIVATION TESTS
+# ============================================================================
+
+def test_tanh_basic():
+    """🧪 Test basic Tanh activation functionality."""
+    print("🧪 Unit Test: Tanh Basic Functionality...")
+    
+    tanh = Tanh()
+    
+    # Test at zero: tanh(0) = 0
+    x = Tensor([0.0])
+    result = tanh(x)
+    assert np.allclose(result.data, 0.0, atol=TOLERANCE)
+    
+    # Test positive values: tanh > 0
+    x = Tensor([1.0, 2.0, 3.0])
+    result = tanh(x)
+    assert np.all(result.data > 0.0)
+    assert np.all(result.data < 1.0)
+    
+    # Test negative values: tanh < 0
+    x = Tensor([-1.0, -2.0, -3.0])
+    result = tanh(x)
+    assert np.all(result.data < 0.0)
+    assert np.all(result.data > -1.0)
+    
+    print("✅ Basic Tanh functionality works!")
+
+
+def test_tanh_known_values():
+    """🧪 Test Tanh with known mathematical values."""
+    print("🧪 Unit Test: Tanh Known Values...")
+    
+    tanh = Tanh()
+    
+    # Test tanh(0) = 0
+    x = Tensor([0.0])
+    result = tanh(x)
+    expected = 0.0
+    assert np.allclose(result.data, expected, atol=TOLERANCE)
+    
+    # Test known values: tanh(ln(2)) ≈ 0.6
+    # tanh(x) = (e^x - e^-x) / (e^x + e^-x)
+    # For x = ln(2): tanh(ln(2)) = (2 - 0.5) / (2 + 0.5) = 1.5 / 2.5 = 0.6
+    x = Tensor([np.log(2)])
+    result = tanh(x)
+    expected = 0.6
+    assert np.allclose(result.data, expected, atol=TOLERANCE)
+    
+    # Test symmetry: tanh(-x) = -tanh(x)
+    x_val = 2.5
+    x_pos = Tensor([x_val])
+    x_neg = Tensor([-x_val])
+    result_pos = tanh(x_pos)
+    result_neg = tanh(x_neg)
+    assert np.allclose(result_pos.data, -result_neg.data, atol=TOLERANCE)
+    
+    # Test tanh(±∞) → ±1
+    large_positive = Tensor([100.0])
+    large_negative = Tensor([-100.0])
+    assert np.allclose(tanh(large_positive).data, 1.0, atol=0.01)
+    assert np.allclose(tanh(large_negative).data, -1.0, atol=0.01)
+    
+    print("✅ Tanh known values correct!")
+
+
+def test_tanh_symmetry():
+    """🧪 Test Tanh symmetry property: tanh(-x) = -tanh(x)."""
+    print("🧪 Unit Test: Tanh Symmetry...")
+    
+    tanh = Tanh()
+    
+    # Test symmetry with various values
+    test_values = [0.5, 1.0, 2.0, 5.0, 10.0]
+    for val in test_values:
+        x_pos = Tensor([val])
+        x_neg = Tensor([-val])
+        
+        result_pos = tanh(x_pos)
+        result_neg = tanh(x_neg)
+        
+        assert np.allclose(result_pos.data, -result_neg.data, atol=TOLERANCE), \
+            f"Symmetry failed for x={val}"
+    
+    # Test with array
+    x = Tensor([-5.0, -2.0, -1.0, 0.0, 1.0, 2.0, 5.0])
+    result = tanh(x)
+    
+    # Check symmetry around zero
+    assert np.allclose(result.data[0], -result.data[6], atol=TOLERANCE)  # -5 and 5
+    assert np.allclose(result.data[1], -result.data[5], atol=TOLERANCE)  # -2 and 2
+    assert np.allclose(result.data[2], -result.data[4], atol=TOLERANCE)  # -1 and 1
+    assert np.allclose(result.data[3], 0.0, atol=TOLERANCE)  # 0
+    
+    print("✅ Tanh symmetry verified!")
+
+
+def test_tanh_numerical_stability():
+    """🧪 Test Tanh numerical stability with extreme values."""
+    print("🧪 Unit Test: Tanh Numerical Stability...")
+    
+    tanh = Tanh()
+    
+    # Test large positive values (should approach 1.0)
+    large_positive = Tensor([100.0, 500.0, 700.0])
+    result = tanh(large_positive)
+    assert np.all(result.data > 0.99), "Large positive values should be close to 1.0"
+    assert np.all(result.data <= 1.0), "Should not exceed 1.0"
+    assert np.all(np.isfinite(result.data)), "Should not produce inf"
+    assert not np.any(np.isnan(result.data)), "Should not produce NaN"
+    
+    # Test large negative values (should approach -1.0)
+    large_negative = Tensor([-100.0, -500.0, -700.0])
+    result = tanh(large_negative)
+    assert np.all(result.data < -0.99), "Large negative values should be close to -1.0"
+    assert np.all(result.data >= -1.0), "Should not go below -1.0"
+    assert np.all(np.isfinite(result.data)), "Should not produce inf"
+    assert not np.any(np.isnan(result.data)), "Should not produce NaN"
+    
+    # Test extreme values
+    extreme = Tensor([-1000.0, 1000.0])
+    result = tanh(extreme)
+    assert np.all(np.isfinite(result.data)), "Extreme values should be handled"
+    assert result.data[0] >= -1.0 and result.data[0] < -0.99
+    assert result.data[1] <= 1.0 and result.data[1] > 0.99
+    
+    print("✅ Tanh numerical stability verified!")
+
+
+def test_tanh_shape_preservation():
+    """🧪 Test that Tanh preserves tensor shapes."""
+    print("🧪 Unit Test: Tanh Shape Preservation...")
+    
+    tanh = Tanh()
+    
+    # Test 1D tensor
+    x_1d = Tensor([1.0, -2.0, 3.0])
+    result = tanh(x_1d)
+    assert result.shape == x_1d.shape, f"Expected {x_1d.shape}, got {result.shape}"
+    
+    # Test 2D tensor
+    x_2d = Tensor([[1.0, -2.0], [-3.0, 4.0]])
+    result = tanh(x_2d)
+    assert result.shape == x_2d.shape, f"Expected {x_2d.shape}, got {result.shape}"
+    
+    # Test 3D tensor
+    x_3d = Tensor([[[1.0, -2.0], [3.0, -4.0]], [[5.0, -6.0], [7.0, -8.0]]])
+    result = tanh(x_3d)
+    assert result.shape == x_3d.shape, f"Expected {x_3d.shape}, got {result.shape}"
+    
+    # Test single scalar
+    x_scalar = Tensor([5.0])
+    result = tanh(x_scalar)
+    assert result.shape == x_scalar.shape, f"Expected {x_scalar.shape}, got {result.shape}"
+    
+    print("✅ Tanh shape preservation works!")
+
+
+def test_tanh_output_range():
+    """🧪 Test that Tanh output is always in (-1, 1) range."""
+    print("🧪 Unit Test: Tanh Output Range...")
+    
+    tanh = Tanh()
+    
+    # Test with random values
+    np.random.seed(42)
+    random_values = np.random.randn(100) * 10
+    x = Tensor(random_values)
+    result = tanh(x)
+    
+    # Verify all outputs are in [-1, 1]
+    assert np.all(result.data >= -1.0), "All values should be >= -1"
+    assert np.all(result.data <= 1.0), "All values should be <= 1"
+    
+    # Test edge cases
+    edge_cases = Tensor([-100, -10, -1, 0, 1, 10, 100])
+    result = tanh(edge_cases)
+    assert np.all(result.data >= -1.0), "All values should be >= -1"
+    assert np.all(result.data <= 1.0), "All values should be <= 1"
+    
+    print("✅ Tanh output range verified!")
+
+
+def test_tanh_monotonicity():
+    """🧪 Test that Tanh is monotonically increasing."""
+    print("🧪 Unit Test: Tanh Monotonicity...")
+    
+    tanh = Tanh()
+    
+    # Create sorted input values
+    x_values = np.linspace(-10, 10, 100)
+    x = Tensor(x_values)
+    result = tanh(x)
+    
+    # Check that output is monotonically increasing (or equal due to float32 precision)
+    for i in range(len(result.data) - 1):
+        assert result.data[i] <= result.data[i + 1], \
+            f"Tanh should be non-decreasing: tanh({x_values[i]})={result.data[i]} should be <= tanh({x_values[i+1]})={result.data[i+1]}"
+    
+    print("✅ Tanh monotonicity verified!")
+
+
+def test_tanh_call_vs_forward():
+    """🧪 Test that __call__ and forward produce identical results."""
+    print("🧪 Unit Test: Tanh __call__ vs forward...")
+    
+    tanh = Tanh()
+    x = Tensor([1.0, -2.0, 3.0, -4.0, 5.0])
+    
+    # Test forward method
+    result_forward = tanh.forward(x)
+    
+    # Test __call__ method
+    result_call = tanh(x)
+    
+    # Should produce identical results
+    assert np.allclose(result_forward.data, result_call.data, atol=TOLERANCE)
+    
+    print("✅ Tanh __call__ and forward are consistent!")
+
+
+def test_tanh_recurrent_networks():
+    """🧪 Test Tanh in recurrent network scenario (common use case)."""
+    print("🧪 Unit Test: Tanh Recurrent Networks...")
+    
+    tanh = Tanh()
+    
+    # Simulate hidden states in RNN/LSTM
+    # tanh is commonly used for state updates to keep values bounded
+    hidden_states = Tensor([
+        [0.5, -0.3, 0.8, -0.2],   # Time step 1
+        [1.5, -1.2, 0.1, -0.5],   # Time step 2
+        [2.0, -2.5, 0.0, 1.0],    # Time step 3
+    ])
+    
+    activated_states = tanh(hidden_states)
+    
+    # Verify all values are bounded in [-1, 1]
+    assert np.all(activated_states.data >= -1.0)
+    assert np.all(activated_states.data <= 1.0)
+    
+    # Verify shape is preserved
+    assert activated_states.shape == hidden_states.shape
+    
+    # Check that extreme values are squashed
+    # Input 2.0 should be close to 1.0
+    # Input -2.5 should be close to -1.0
+    assert activated_states.data[2, 0] > 0.95  # tanh(2.0) ≈ 0.96
+    assert activated_states.data[2, 1] < -0.95  # tanh(-2.5) ≈ -0.99
+    
+    print("✅ Tanh recurrent network scenario works!")
+
+
+def test_tanh_repr():
+    """🧪 Test Tanh string representation."""
+    print("🧪 Unit Test: Tanh __repr__...")
+    
+    tanh = Tanh()
+    repr_str = repr(tanh)
+    
+    assert "Tanh" in repr_str, "Repr should contain 'Tanh'"
+    assert repr_str == "Tanh()", f"Expected 'Tanh()', got '{repr_str}'"
+    
+    print("✅ Tanh __repr__ works!")
+
+
+def test_tanh_batch_processing():
+    """🧪 Test Tanh with batch processing."""
+    print("🧪 Unit Test: Tanh Batch Processing...")
+    
+    tanh = Tanh()
+    
+    # Simulate a batch of samples (batch_size=4, features=3)
+    batch = Tensor([
+        [1.0, -2.0, 3.0],    # Sample 1
+        [0.0, 0.0, 0.0],     # Sample 2 (zero)
+        [-1.0, -2.0, -3.0],  # Sample 3 (negative)
+        [10.0, -10.0, 0.5]   # Sample 4 (extreme + moderate)
+    ])
+    
+    result = tanh(batch)
+    
+    # Verify shape is preserved
+    assert result.shape == batch.shape
+    
+    # Verify all values in valid range
+    assert np.all(result.data >= -1.0)
+    assert np.all(result.data <= 1.0)
+    
+    # Verify each sample processed independently
+    for i in range(batch.shape[0]):
+        sample_result = tanh(Tensor(batch.data[i]))
+        assert np.allclose(result.data[i], sample_result.data, atol=TOLERANCE)
+    
+    print("✅ Tanh batch processing works!")
+
+
+def test_tanh_comparison_with_sigmoid():
+    """🧪 Test conceptual differences between Tanh and Sigmoid."""
+    print("🧪 Unit Test: Tanh vs Sigmoid Comparison...")
+    
+    tanh = Tanh()
+    sigmoid = Sigmoid()
+    
+    x = Tensor([0.0])
+    
+    # Tanh(0) = 0
+    tanh_output = tanh(x)
+    assert np.allclose(tanh_output.data, 0.0, atol=TOLERANCE)
+    
+    # Sigmoid(0) = 0.5
+    sigmoid_output = sigmoid(x)
+    assert np.allclose(sigmoid_output.data, 0.5, atol=TOLERANCE)
+    
+    # Tanh range: [-1, 1]
+    x_large = Tensor([100.0])
+    assert tanh(x_large).data[0] <= 1.0
+    x_small = Tensor([-100.0])
+    assert tanh(x_small).data[0] >= -1.0
+    
+    # Sigmoid range: [0, 1]
+    assert sigmoid(x_large).data[0] <= 1.0
+    assert sigmoid(x_small).data[0] >= 0.0
+    
+    # Tanh is zero-centered, Sigmoid is not
+    x_neg = Tensor([-1.0])
+    assert tanh(x_neg).data[0] < 0.0, "Tanh can output negative values"
+    assert sigmoid(x_neg).data[0] > 0.0, "Sigmoid always outputs positive"
+    
+    print("✅ Tanh vs Sigmoid comparison complete!")
+
+
 if __name__ == "__main__":
     print("\n" + "=" * 60)
     print("🧪 RUNNING ACTIVATION FUNCTION TESTS")
@@ -595,6 +928,21 @@ if __name__ == "__main__":
     test_relu_repr()
     test_relu_batch_processing()
     test_relu_comparison_with_sigmoid()
+    
+    print("\n📋 TANH TESTS")
+    print("-" * 60)
+    test_tanh_basic()
+    test_tanh_known_values()
+    test_tanh_symmetry()
+    test_tanh_numerical_stability()
+    test_tanh_shape_preservation()
+    test_tanh_output_range()
+    test_tanh_monotonicity()
+    test_tanh_call_vs_forward()
+    test_tanh_recurrent_networks()
+    test_tanh_repr()
+    test_tanh_batch_processing()
+    test_tanh_comparison_with_sigmoid()
     
     print("\n" + "=" * 60)
     print("🎉 ALL ACTIVATION TESTS PASSED!")
