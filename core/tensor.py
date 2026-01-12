@@ -56,12 +56,13 @@ Broadcasting Examples:
 
 class Tensor:
     
-    def __init__(self, data):
+    def __init__(self, data, requires_grad=True):
 
         self.data = np.array(data, dtype=np.float32)
         self.shape = self.data.shape
         self.size = self.data.size
         self.dtype = self.data.dtype
+        self.requires_grad = requires_grad
 
     def __repr__(self):
         return f"Tensor(data={self.data}, shape={self.shape})"
