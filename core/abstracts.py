@@ -86,3 +86,58 @@ class ActivationAbstract(ABC):
     def __repr__(self):
         """String representation of activation."""
         return f"{self.__class__.__name__}()"
+
+
+class LayerAbstract(ABC):
+    """Abstract base class for neural network layers.
+    
+    All layers inherit from this class and must implement:
+    - forward(): Compute output from input tensor
+    - backward(): Compute gradients for backpropagation
+    - parameters(): Return learnable parameters
+    
+    Architecture:
+    ┌─────────────────────────────────────┐
+    │ Layer (Abstract Base)               │
+    ├─────────────────────────────────────┤
+    │ Methods:                            │
+    │ • forward(x: Tensor) → Tensor      │
+    │ • backward(grad: Tensor) → Tensor  │
+    │ • parameters() → List[Tensor]      │
+    ├─────────────────────────────────────┤
+    │ Implementations:                    │
+    │ • Linear                            │
+    │ • Dropout (Regularization)         │
+    └─────────────────────────────────────┘
+    
+    Use Cases:
+    - Building blocks for neural networks
+    - Feature extraction, transformation, and learning
+    """
+    
+    @abstractmethod
+    def forward(self, x: Tensor) -> Tensor:
+        """Forward pass through the layer Compute output from input tensor.
+        
+        Args:
+            x: Input tensor
+            
+        Returns:
+            Output tensor
+            
+        Raises:
+            NotImplementedError: Subclass must implement
+        """
+        pass
+
+    def __call__(self, x, *args, **kwargs):
+        """Convenience method for forward pass."""
+        return self.forward(x, *args, **kwargs)
+    
+    def parameters(self):
+        """Return list of learnable parameters."""
+        return []
+    
+    def __repr__(self):
+        """String representation of layer."""
+        return f"{self.__class__.__name__}()"

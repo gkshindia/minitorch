@@ -131,7 +131,7 @@ class Tensor:
             return Tensor(self.data * other.data)
         if len(self.shape) == 0 or len(self.shape) == 0:
             return Tensor(self.data * other.data)
-        if len(self.shape) >= 2 or len(self.other) >= 2:
+        if len(self.shape) >= 2 or len(other.shape) >= 2:
             if self.shape[-1] != other.shape[-2]:
                 raise ValueError(
                     f"Cannot perform matrix multiplication: {self.shape} @ {other.shape}"
