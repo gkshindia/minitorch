@@ -141,3 +141,19 @@ class LayerAbstract(ABC):
     def __repr__(self):
         """String representation of layer."""
         return f"{self.__class__.__name__}()"
+
+
+class DatasetAbstract(ABC):
+    """
+    Provides the fundamental interface that all datasets must implement:
+    - __len__(): Returns the total number of samples
+    - __getitem__(idx): Returns the sample at given index
+    """
+
+    @abstractmethod
+    def __len__(self) -> int:
+        pass
+
+    @abstractmethod
+    def __getitem__(self, idx: int):
+        pass
