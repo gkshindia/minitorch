@@ -157,3 +157,29 @@ class DatasetAbstract(ABC):
     @abstractmethod
     def __getitem__(self, idx: int):
         pass
+
+
+class FunctionAbstract(ABC):
+    """
+    Base class for differentiable operations.
+
+    Every operation that needs gradients (add, multiply, matmul, etc.)
+    will inherit from this class and implement the apply() method.
+
+    **Key Concepts:**
+    - **saved_tensors**: Store inputs needed for backward pass
+    - **apply()**: Compute gradients using chain rule
+    - **next_functions**: Track computation graph connections
+    """
+
+    def __init__(self, *tensors):
+        self.saved_tensors = tensors
+        self.next_functions = []
+
+        for t in tensors:
+            if isinstance(t, Tensor) and t.requires_grad:
+                if getattr(t, '_grad_fn', None) is not None:
+                    self.next_functions.append(t._grad_fn)
+    
+    def apply(self, grad_output):
+        raise NotImplementedError("Each function must implement an apply method.")
