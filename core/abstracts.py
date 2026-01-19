@@ -183,3 +183,64 @@ class FunctionAbstract(ABC):
     
     def apply(self, grad_output):
         raise NotImplementedError("Each function must implement an apply method.")
+
+
+class OptimizerAbstract(ABC):
+    """Abstract base class for optimizers.
+    
+    All optimizers inherit from this class and must implement:
+    - step(): Update parameters based on gradients
+    - zero_grad(): Clear gradients of all parameters
+    
+    Architecture:
+    ┌─────────────────────────────────────┐
+    │ Optimizer (Abstract Base)          │
+    ├─────────────────────────────────────┤
+    │ Methods:                            │
+    │ • step()                           │
+    │ • zero_grad()                      │
+    ├─────────────────────────────────────┤
+    │ Implementations:                    │
+    │ • SGD                              │
+    │ • Adam                             │
+    │ • AdamW                            │
+    └─────────────────────────────────────┘
+    
+    Use Cases:
+    - Training neural networks by updating weights based on computed gradients.
+
+        1. Store parameters as a list for iteration
+        2. Validate that all parameters require gradients
+        3. Initialize step counter for algorithms that need it
+    """
+    
+    def __init__(self, parameters):
+        """Initialize optimizer with model parameters.
+        
+        Args:
+            parameters: Iterable of model parameters to optimize
+        """
+        if not isinstance(parameters, list):
+            parameters = list(parameters)
+        
+        self.parameters = parameters
+        self.step_count = 0
+    
+    @abstractmethod
+    def step(self):
+        """Update parameters based on gradients.
+        
+        Raises:
+            NotImplementedError: Subclass must implement
+        """
+        raise NotImplementedError("Subclass must implememnt step()")
+    
+    @abstractmethod
+    def zero_grad(self):
+        """Clear gradients of all parameters. Update parameters based on gradients
+        
+        Raises:
+            NotImplementedError: Subclass must implement
+        """
+        for parameter in self.parameters:
+            parameter.grad = None
