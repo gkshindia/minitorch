@@ -7,9 +7,8 @@ Derivative: ∂L/∂p = (p - y) / (p*(1-p)*N)
 """
 
 import numpy as np
-import pytest
 from core.tensor import Tensor
-from core.autograd import BCEBackward, enable_autograd, EPSILON
+from core.autograd import BCEBackward, EPSILON
 
 
 def test_bce_backward_simple():

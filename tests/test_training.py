@@ -13,15 +13,13 @@ Each test follows the pattern:
 """
 
 import numpy as np
-import pickle
 import os
 import tempfile
-from pathlib import Path
 
 from core.tensor import Tensor
 from core.layers import Linear
-from core.losses import MSELoss, CrossEntropyLoss
-from core.optimizers import SGD, AdamW
+from core.losses import MSELoss
+from core.optimizers import SGD
 from core.training import CosineSchedule, clip_gradeints_norm, Trainer
 
 

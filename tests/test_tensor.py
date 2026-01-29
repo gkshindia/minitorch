@@ -1,5 +1,4 @@
 import numpy as np
-import pytest
 from core.tensor import Tensor
 
 def test_initialization_and_properties():

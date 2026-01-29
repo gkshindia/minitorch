@@ -1,7 +1,6 @@
 import numpy as np
 
 from core.tensor import Tensor
-from core.activations import ReLU, Sigmoid
 
 from core.abstracts import LayerAbstract
 

@@ -9,9 +9,8 @@ This is one of the most elegant gradients in ML!
 """
 
 import numpy as np
-import pytest
 from core.tensor import Tensor
-from core.autograd import CrossEntropyBackward, enable_autograd
+from core.autograd import CrossEntropyBackward
 
 
 def softmax(x):

@@ -8,9 +8,7 @@ Mathematical Rule: If z = a / b, then:
 """
 
 import numpy as np
-import pytest
 from core.tensor import Tensor
-from core.autograd import DivBackward, enable_autograd
 
 
 def test_div_backward_simple():

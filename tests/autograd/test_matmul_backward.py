@@ -8,9 +8,7 @@ Mathematical Rule: If Z = A @ B, then:
 """
 
 import numpy as np
-import pytest
 from core.tensor import Tensor
-from core.autograd import MatMulBackward, enable_autograd
 
 
 def test_matmul_backward_simple():

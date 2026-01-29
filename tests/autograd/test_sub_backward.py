@@ -6,9 +6,7 @@ Mathematical Rule: If z = a - b, then ∂z/∂a = 1 and ∂z/∂b = -1
 """
 
 import numpy as np
-import pytest
 from core.tensor import Tensor
-from core.autograd import SubBackward, enable_autograd
 
 
 def test_sub_backward_simple():

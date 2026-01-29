@@ -7,9 +7,7 @@ Mathematical Rule: If Y = X.reshape(new_shape), then:
 """
 
 import numpy as np
-import pytest
 from core.tensor import Tensor
-from core.autograd import ReshapeBackward, enable_autograd
 
 
 def test_reshape_backward_simple():

@@ -12,7 +12,6 @@ Usage:
 """
 
 import sys
-import os
 from pathlib import Path
 
 # Add project root to path

@@ -1,5 +1,5 @@
 import numpy as np
-from typing import Dict, Any, Optional, List, Union
+from typing import Optional, List
 
 from core.abstracts import OptimizerAbstract
 from core.tensor import Tensor

@@ -1,5 +1,4 @@
 import numpy as np
-from typing import Optional
 from core.abstracts import ActivationAbstract
 from core.tensor import Tensor
 

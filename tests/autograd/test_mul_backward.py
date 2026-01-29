@@ -6,9 +6,7 @@ Mathematical Rule: If z = a * b, then ∂z/∂a = b and ∂z/∂b = a
 """
 
 import numpy as np
-import pytest
 from core.tensor import Tensor
-from core.autograd import MulBackward, enable_autograd
 
 
 def test_mul_backward_simple():

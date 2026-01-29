@@ -7,9 +7,8 @@ Approximation: gelu(x) ≈ 0.5 * x * (1 + tanh(√(2/π) * (x + 0.044715 * x³))
 """
 
 import numpy as np
-import pytest
 from core.tensor import Tensor
-from core.autograd import GELUBackward, enable_autograd
+from core.autograd import GELUBackward
 
 
 def gelu(x):

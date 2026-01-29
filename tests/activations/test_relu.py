@@ -8,10 +8,9 @@ Comprehensive test suite for ReLU activation with focus on:
 - Dead neuron scenarios
 """
 import numpy as np
-import pytest
 from core.tensor import Tensor
 from core.activations import ReLU
-from tests.activations.conftest import TOLERANCE, assert_shape_preserved, assert_bounded, assert_finite, assert_monotonic_increasing
+from tests.activations.conftest import TOLERANCE, assert_shape_preserved
 
 
 class TestReLUBasics:

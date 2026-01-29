@@ -1,9 +1,6 @@
 import numpy as np
-from typing import Optional
 
 from core.tensor import Tensor
-from core.activations import ReLU
-from core.layers import Linear
 
 
 """

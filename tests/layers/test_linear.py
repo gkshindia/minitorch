@@ -10,7 +10,6 @@ Comprehensive test suite for Linear (fully-connected) layer with focus on:
 """
 
 import numpy as np
-import pytest
 from core.tensor import Tensor
 from core.layers import Linear
 from tests.layers.conftest import (

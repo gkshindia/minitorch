@@ -9,7 +9,6 @@ conceptual and mathematical differences:
 - GELU vs Sigmoid
 """
 import numpy as np
-import pytest
 from core.tensor import Tensor
 from core.activations import ReLU, Sigmoid, Tanh, GELU as Gelu
 from tests.activations.conftest import TOLERANCE

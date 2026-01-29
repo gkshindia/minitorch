@@ -1427,5 +1427,4 @@ def enable_autograd(quiet=False):
 
 # Auto-enable when module is imported
 # Always quiet to avoid cluttering user imports
-import os
 enable_autograd(quiet=True)

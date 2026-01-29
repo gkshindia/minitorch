@@ -7,9 +7,8 @@ Gradient: ∂L/∂x[i] = softmax[i] * (∂L/∂y[i] - sum(∂L/∂y * softmax))
 """
 
 import numpy as np
-import pytest
 from core.tensor import Tensor
-from core.autograd import SoftmaxBackward, enable_autograd
+from core.autograd import SoftmaxBackward
 
 
 def softmax(x, axis=-1):

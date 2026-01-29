@@ -1,5 +1,4 @@
 import numpy as np
-import pytest
 from core.tensor import Tensor
 
 # Import individual test functions from test_tensor.py

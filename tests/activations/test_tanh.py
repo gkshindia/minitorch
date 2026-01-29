@@ -8,7 +8,6 @@ Comprehensive test suite for Tanh activation with focus on:
 - Use in RNNs and LSTMs to maintain bounded hidden states
 """
 import numpy as np
-import pytest
 from core.tensor import Tensor
 from core.activations import Tanh
 from tests.activations.conftest import TOLERANCE, assert_shape_preserved, assert_bounded, assert_finite, assert_monotonic_increasing, assert_symmetry

@@ -7,9 +7,8 @@ Mathematical Rule: If Y = Embedding[indices], then:
 """
 
 import numpy as np
-import pytest
 from core.tensor import Tensor
-from core.autograd import EmbeddingBackward, enable_autograd
+from core.autograd import EmbeddingBackward
 
 
 def test_embedding_backward_simple():

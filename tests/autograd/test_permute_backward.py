@@ -7,9 +7,8 @@ Mathematical Rule: If Y = X.permute(axes), then:
 """
 
 import numpy as np
-import pytest
 from core.tensor import Tensor
-from core.autograd import PermuteBackward, enable_autograd
+from core.autograd import PermuteBackward
 
 
 def test_permute_backward_simple():

@@ -6,9 +6,7 @@ Mathematical Rule: If z = sum(a), then ∂z/∂a[i] = 1 for all i
 """
 
 import numpy as np
-import pytest
 from core.tensor import Tensor
-from core.autograd import SumBackward, enable_autograd
 
 
 def test_sum_backward_simple():

@@ -8,7 +8,6 @@ Comprehensive test suite for GELU activation with focus on:
 - Mathematical smoothness (differentiable everywhere)
 """
 import numpy as np
-import pytest
 from core.tensor import Tensor
 from core.activations import GELU as Gelu, ReLU
 from tests.activations.conftest import TOLERANCE, assert_shape_preserved, assert_finite

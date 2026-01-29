@@ -7,9 +7,8 @@ Derivative: f'(x) = 1 if x > 0, else 0
 """
 
 import numpy as np
-import pytest
 from core.tensor import Tensor
-from core.autograd import ReLUBackward, enable_autograd
+from core.autograd import ReLUBackward
 
 
 def test_relu_backward_simple():

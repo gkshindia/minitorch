@@ -9,7 +9,6 @@ Comprehensive test suite for Softmax activation with focus on:
 - Used extensively in classification tasks (output layer)
 """
 import numpy as np
-import pytest
 from core.tensor import Tensor
 from core.activations import Softmax
 from tests.activations.conftest import TOLERANCE, assert_shape_preserved, assert_finite

@@ -7,9 +7,8 @@ Derivative: σ'(x) = σ(x) * (1 - σ(x))
 """
 
 import numpy as np
-import pytest
 from core.tensor import Tensor
-from core.autograd import SigmoidBackward, enable_autograd
+from core.autograd import SigmoidBackward
 
 
 def sigmoid(x):

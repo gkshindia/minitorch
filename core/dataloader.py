@@ -1,8 +1,6 @@
 import numpy as np
 import random
-import time
-import sys
-from typing import Optional, Tuple, List, Iterator, Union
+from typing import Tuple, List, Iterator
 
 from core.abstracts import DatasetAbstract
 from core.tensor import Tensor

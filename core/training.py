@@ -1,15 +1,12 @@
 import numpy as np
 import pickle
-import time
-from typing import Dict, List, Optional, Tuple, Any, Callable
+from typing import Dict, List, Optional, Any
 from pathlib import Path
-import sys
-import os
 
 from core.tensor import Tensor
 from core.layers import Linear
-from core.losses import MSELoss, CrossEntropyLoss
-from core.optimizers import SGD, AdamW
+from core.losses import MSELoss
+from core.optimizers import SGD
 
 
 DEFAULT_MAX_LR = 0.1

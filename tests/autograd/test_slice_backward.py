@@ -8,9 +8,7 @@ Mathematical Rule: If Y = X[key], then:
 """
 
 import numpy as np
-import pytest
 from core.tensor import Tensor
-from core.autograd import SliceBackward, enable_autograd
 
 
 def test_slice_backward_simple():

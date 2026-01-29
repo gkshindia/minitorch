@@ -7,9 +7,8 @@ Derivative: ∂L/∂predictions = 2 * (predictions - targets) / N
 """
 
 import numpy as np
-import pytest
 from core.tensor import Tensor
-from core.autograd import MSEBackward, enable_autograd
+from core.autograd import MSEBackward
 
 
 def test_mse_backward_simple():

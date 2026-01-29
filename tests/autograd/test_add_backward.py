@@ -6,9 +6,7 @@ Mathematical Rule: If z = a + b, then ∂z/∂a = 1 and ∂z/∂b = 1
 """
 
 import numpy as np
-import pytest
 from core.tensor import Tensor
-from core.autograd import AddBackward, enable_autograd
 
 
 def test_add_backward_simple():

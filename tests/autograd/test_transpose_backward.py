@@ -6,9 +6,7 @@ Mathematical Rule: If Y = X.T, then ∂Y/∂X = grad_Y.T
 """
 
 import numpy as np
-import pytest
 from core.tensor import Tensor
-from core.autograd import TransposeBackward, enable_autograd
 
 
 def test_transpose_backward_simple():

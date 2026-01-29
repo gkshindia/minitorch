@@ -10,14 +10,9 @@ This module tests:
 """
 
 import numpy as np
-import sys
 from core.tensor import Tensor
 from core.autograd import (
-    AddBackward, MulBackward, SubBackward, DivBackward,
-    MatMulBackward, TransposeBackward, PermuteBackward, ReshapeBackward,
-    EmbeddingBackward, SliceBackward, SumBackward,
-    ReLUBackward, SigmoidBackward, SoftmaxBackward, GELUBackward,
-    MSEBackward, BCEBackward, CrossEntropyBackward,
+    ReLUBackward, SigmoidBackward, SoftmaxBackward, MSEBackward, BCEBackward, CrossEntropyBackward,
     enable_autograd
 )
 

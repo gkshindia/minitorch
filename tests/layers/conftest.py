@@ -3,7 +3,6 @@ Shared configuration and utilities for layer tests.
 """
 
 import numpy as np
-import pytest
 
 TOLERANCE = 1e-5
 

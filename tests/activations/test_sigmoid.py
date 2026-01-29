@@ -8,7 +8,6 @@ Comprehensive test suite for Sigmoid activation with focus on:
 - Real-world use cases (binary classification)
 """
 import numpy as np
-import pytest
 from core.tensor import Tensor
 from core.activations import Sigmoid
 from tests.activations.conftest import TOLERANCE, assert_shape_preserved, assert_bounded, assert_finite, assert_monotonic_increasing
