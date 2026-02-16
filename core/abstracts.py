@@ -1,4 +1,7 @@
 from abc import ABC, abstractmethod
+
+from typing import List
+
 from core.tensor import Tensor
 
 
@@ -244,3 +247,19 @@ class OptimizerAbstract(ABC):
         """
         for parameter in self.parameters:
             parameter.grad = None
+
+
+class Tokenizer(ABC):
+    """
+    Base tokenizer class providing the interface for all tokenizers.
+
+    This defines the contract that all tokenizers must follow:
+    - encode(): text → list of token IDs
+    - decode(): list of token IDs → text
+    """
+
+    def encode(self, text: str) -> List[int]:
+        raise NotImplementedError("Subclasses must implement encode()")
+    
+    def decode(self, tokens: List[int]) -> str:
+        raise NotImplementedError("Subclasses must implement decode()")
