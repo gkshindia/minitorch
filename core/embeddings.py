@@ -1,8 +1,9 @@
 import numpy as np
 import math
-from typing import List, Optional, Tuple
+from typing import List, Optional, Tuple, Union
 
 from core.tensor import Tensor
+from core.autograd import EmbeddingBackward
 
 BYTES_PER_FLOAT32 = 4  # Standard float32 size in bytes
 MB_TO_BYTES = 1024 * 1024
@@ -38,7 +39,9 @@ class Embedding:
             )
         
         embedded = self.weight.data[indices.data.astype(int)]
-        return Tensor(embedded)
+        output = Tensor(embedded)
+        output._grad_fn = EmbeddingBackward(self.weight, indices)
+        return output
     
     def __call__(self, indices: Tensor) -> Tensor:
         return self.forward(indices)
@@ -90,8 +93,7 @@ class PositionalEncoding:
         pos_embeddings = self.position_embeddings[:seq_len]  # (seq_len, embed_dim)
 
         # Reshape to add batch dimension: (1, seq_len, embed_dim)
-        pos_data = pos_embeddings.data[np.newaxis, :, :]
-        pos_embeddings_batched = Tensor(pos_data)
+        pos_embeddings_batched = pos_embeddings.reshape(1, seq_len, embed_dim)
 
         # Add positional information
         result = x + pos_embeddings_batched
@@ -163,7 +165,7 @@ class EmbeddingLayer:
         vocab_size: int,
         embed_dim: int,
         max_seq_len: int = 512,
-        pos_encoding: str = 'learned',
+        pos_encoding: Optional[str] = 'learned',
         scale_embeddings: bool = False
     ):
         self.vocab_size = vocab_size
@@ -173,6 +175,7 @@ class EmbeddingLayer:
         self.scale_embeddings = scale_embeddings
 
         self.token_embedding = Embedding(vocab_size, embed_dim)
+        self.pos_encoding: Optional[Union[PositionalEncoding, Tensor]] = None
 
         if pos_encoding == 'learned':
             self.pos_encoding = PositionalEncoding(max_seq_len, embed_dim)
@@ -197,13 +200,14 @@ class EmbeddingLayer:
             token_embeds = token_embeds * scale_factor
         
         if self.pos_encoding_type == 'learned':
+            assert isinstance(self.pos_encoding, PositionalEncoding)
             output = self.pos_encoding.forward(token_embeds)
         elif self.pos_encoding_type == 'sinusoidal':
             batch_size, seq_len, embed_dim = token_embeds.shape
+            assert isinstance(self.pos_encoding, Tensor)
             pos_embeddings = self.pos_encoding[:seq_len]
 
-            pos_data = pos_embeddings.data[np.newaxis, :, :]
-            pos_embeddings_batched = Tensor(pos_data)
+            pos_embeddings_batched = pos_embeddings.reshape(1, seq_len, embed_dim)
 
             output = token_embeds + pos_embeddings_batched
         else:
@@ -220,6 +224,7 @@ class EmbeddingLayer:
         params = self.token_embedding.parameters()
 
         if self.pos_encoding_type == 'learned':
+            assert isinstance(self.pos_encoding, PositionalEncoding)
             params.extend(self.pos_encoding.parameters())
 
         return params

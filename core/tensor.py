@@ -63,6 +63,8 @@ class Tensor:
         self.size = self.data.size
         self.dtype = self.data.dtype
         self.requires_grad = requires_grad
+        self._grad_fn = None
+        self.grad = None
 
     def __repr__(self):
         return f"Tensor(data={self.data}, shape={self.shape})"
